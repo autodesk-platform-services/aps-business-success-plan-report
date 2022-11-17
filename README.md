@@ -29,11 +29,11 @@ Uses 3-legged oAuth2 with implicit grant to authenticate with Autodesk Platform 
 
 - Take note of the Client ID which you need to enter as soon as you login.
 
-- Use http://localhost:5500 as redirect URL in Autodesk Platform Services App.
+- Use https://autodesk-platform-services.github.io/aps-premium-report/ as redirect URL in Autodesk Platform Services App.
 
 - Clone or download the folder. Open the folder inside in Visual Studio Code.
 
-- Use http://localhost:5500 as redirect URL in the js/method.js file.
+- Use https://autodesk-platform-services.github.io/aps-premium-report/ as redirect URL in the js/method.js file.
 
 - Click Go live to run live server.
 
