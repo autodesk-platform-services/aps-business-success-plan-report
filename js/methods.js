@@ -504,6 +504,7 @@ var premiumApi = {
     try {
       if (a != null) {
         document.getElementById("para").innerHTML = a;
+        premiumApi.logIn();
       }
     } catch (err) {
       document.getElementById("para1").innerHTML = err.name;
