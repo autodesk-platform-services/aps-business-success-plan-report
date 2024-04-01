@@ -7,13 +7,13 @@
 
 The sample helps viewing, building custom reports and exporting usage query & export usage query API data in the form of tables, charts from Premium Reporting APIs.
 
-Uses 3-legged oAuth2 with implicit grant to authenticate with Autodesk Platform Services.
+Uses 3-legged oAuth2 with implicit grant to authenticate with aps.
 
-![1663190060688](thumbnail.PNG)
+![thumbnail](thumbnail.PNG)
 
 ### Pre-requisites
 
-- Autodesk Platform Services Account: Learn how to create a Autodesk Platform Services Account, activate subscription and create an app at [this tutorial](https://forge-tutorials.autodesk.io/)
+- Autodesk Platform Services Account: Learn how to create a aps Account, activate subscription and create an app at [this tutorial](https://forge-tutorials.autodesk.io/)
 
 - Visual Studio Code
 
@@ -25,15 +25,15 @@ Uses 3-legged oAuth2 with implicit grant to authenticate with Autodesk Platform 
 
 ### Setup
 
-- Create a [aps app](https://forge-tutorials.autodesk.io/) with access to the Premium Reporting API.
+- Create a [Autodesk Platform Services app](https://forge-tutorials.autodesk.io/) with access to the Premium Reporting API.
 
 - Take note of the Client ID which you need to enter as soon as you login.
 
-- Use https://autodesk-platform-services.github.io/aps-premium-report/ as redirect URL in Autodesk Platform Services App.
+- Use http://localhost:5500 as redirect URL in aps App.
 
 - Clone or download the folder. Open the folder inside in Visual Studio Code.
 
-- Use https://autodesk-platform-services.github.io/aps-premium-report/ as redirect URL in the js/method.js file.
+- Use http://localhost:5500 as redirect URL in the js/method.js file.
 
 - Click Go live to run live server.
 

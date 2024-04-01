@@ -1,6 +1,6 @@
 ﻿/////////////////////////////////////////////////////////////////////
 // Copyright (c) Autodesk, Inc. All rights reserved
-// Written by aps Partner Development
+// Written by APS Partner Development
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -479,11 +479,9 @@ var premiumApi = {
     console.log("logIn");
     let clientId = a;
     let scopes = "data:read+data:write+bucket:read";
-    let redirectUri = encodeURI(
-      "https://autodesk-platform-services.github.io/aps-premium-report/"
-    );
+    let redirectUri = encodeURI("http://localhost:5500");
     window.open(
-      `https://developer.api.autodesk.com/authentication/v1/authorize` +
+      `https://developer.api.autodesk.com/authentication/v2/authorize` +
         `?response_type=token&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}`,
       "_self"
     );
@@ -495,8 +493,7 @@ var premiumApi = {
   logOut: function () {
     console.log("logOut");
     if (premiumApi.access_token === "") return;
-    let url =
-      "https://autodesk-platform-services.github.io/aps-premium-report/";
+    let url = "http://localhost:5500";
     location.href = url;
   },
   client_id_value: function () {
