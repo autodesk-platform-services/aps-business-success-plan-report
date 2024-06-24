@@ -479,7 +479,9 @@ var premiumApi = {
     console.log("logIn");
     let clientId = a;
     let scopes = "data:read+data:write+bucket:read";
-    let redirectUri = encodeURI("http://localhost:5500");
+    let redirectUri = encodeURI(
+      "https://autodesk-platform-services.github.io/aps-premium-report/"
+    );
     window.open(
       `https://developer.api.autodesk.com/authentication/v2/authorize` +
         `?response_type=token&client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes}`,
