@@ -3,7 +3,7 @@
 
   float: right;
   display: block;
-  background-color: black
+  background-color: black;
   color: #333; /* Dark grey */
   padding: 16px 42px;
   border-radius: 0px;
@@ -17,11 +17,11 @@
 }
 
 .buttonstyle {
-  border: 2px black
+  border: 2px black;
   display: block;
   margin: 0 auto;
   display: block;
-  background-color: black
+  background-color: black;
   color: white; /* Dark grey */
   padding: 12px 12px;
   border-radius: 0px;
@@ -60,7 +60,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: black
+  background-color: black;
   color: white;
   position: sticky;
   top: 0px;
@@ -96,7 +96,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: black
+  background-color: black;
   color: white;
   position: sticky;
   top: 0px;
@@ -125,7 +125,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: black
+  background-color: black;
   color: white;
   position: sticky;
   top: 0px;
@@ -155,7 +155,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: black
+  background-color: black;
   color: white;
 }
 
@@ -183,7 +183,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: black
+  background-color: black;
   color: white;
   position: sticky;
   top: 0px;
@@ -213,7 +213,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: black
+  background-color: black;
   color: white;
   position: sticky;
   top: 0px;
@@ -243,7 +243,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: black
+  background-color: black;
   color: white;
   position: sticky;
   top: 0px;
@@ -273,7 +273,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: black
+  background-color: black;
   color: white;
   position: sticky;
   top: 0px;
@@ -303,7 +303,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: black
+  background-color: black;
   color: white;
   position: sticky;
   top: 0px;
@@ -333,7 +333,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: black
+  background-color: black;
   color: white;
   position: sticky;
   top: 0px;
@@ -352,7 +352,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: black
+  background-color: black;
   color: white;
   position: sticky;
   top: 0px;
