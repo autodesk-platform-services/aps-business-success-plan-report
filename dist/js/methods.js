@@ -493,7 +493,7 @@ var premiumApi = {
   logOut: function () {
     console.log("logOut");
     if (premiumApi.access_token === "") return;
-    let url = "http://localhost:5500";
+    let url = "https://autodesk-platform-services.github.io/aps-premium-report";
     location.href = url;
   },
   client_id_value: function () {
