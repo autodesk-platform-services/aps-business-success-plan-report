@@ -5,7 +5,7 @@
 
 # Description
 
-The sample helps viewing, building custom reports and exporting usage query & export usage query API data in the form of tables, charts from Premium Reporting APIs.
+The sample helps viewing, building custom reports and exporting usage query & export usage query API data in the form of tables, charts from Business Success Plan Reporting Sample.
 
 Uses 3-legged oAuth2 with implicit grant to authenticate with aps.
 
