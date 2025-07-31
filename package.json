@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/autodesk-platform-services/aps-premium-report"
+    "url": "git+https://github.com/autodesk-platform-services/aps-business-success-report"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/autodesk-platform-services/aps-premium-report/issues"
+    "url": "https://github.com/autodesk-platform-services/aps-business-success-report/issues"
   },
-  "homepage": "https://github.com/autodesk-platform-services/aps-premium-report#readme",
+  "homepage": "https://github.com/autodesk-platform-services/aps-business-success-reportt#readme",
   "dependencies": {
     "gh-pages": "^4.0.0"
   },
