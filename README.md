@@ -47,7 +47,7 @@ Uses 3-legged oAuth2 with implicit grant to authenticate with aps.
 
 ### Deployment
 
-The above sample is deployed on https://autodesk-platform-services.github.io/aps-premium-report/
+The above sample is deployed on https://autodesk-platform-services.github.io/aps-business-success-plan-report/
 
 To deploy your changed code use GitHub pages. Follow this [tutorial](https://www.youtube.com/watch?v=SKXkC4SqtRk)
 
