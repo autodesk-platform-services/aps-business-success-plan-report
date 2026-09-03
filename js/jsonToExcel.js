@@ -15,20 +15,14 @@
 // DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 /////////////////////////////////////////////////////////////////////
-document.getElementsByTagName("head")[0].innerHTML +=
-  '<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>';
+// Note: index.html does not load this file, and it has never worked as written
+// - it runs at load time against an "active" array that the page does not
+// define. It is kept only for reference.
 var createXLSLFormatObj = [];
 var xlsHeader = ["Email", "License Purchased"];
 createXLSLFormatObj.push(xlsHeader);
-$.each(active, function (index, value) {
-  var innerRowData = [];
-  $("tbody").append(
-    "<tr><td>" + email.value + "</td><td>" + seat_quantity.value + "</td></tr>"
-  );
-  $.each(value, function (ind, val) {
-    innerRowData.push(val);
-  });
-  createXLSLFormatObj.push(innerRowData);
+Array.prototype.forEach.call(active, function (value) {
+  createXLSLFormatObj.push(Object.values(value));
 });
 /* File Name */
 var filename = "license_assigned.xlsx";

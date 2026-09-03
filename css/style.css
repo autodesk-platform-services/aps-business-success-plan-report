@@ -67,39 +67,74 @@
 }
 /* To display the block as level element */
 
-#exceltable1 {
+/* The four usage-report tables. Targeted by class rather than by id: they used
+   to share one duplicated id, and renaming them to be unique silently orphaned
+   every rule here. */
+.resulttable {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
-}
-#exceltable1 tbody {
   width: 100%;
 }
-#exceltable1 thead {
+.resulttable tbody {
+  width: 100%;
+}
+.resulttable thead {
   position: sticky;
 }
 
-#exceltable1 td,
-#exceltable1 th {
-  border: 1px solid #ddd;
+.resulttable td,
+.resulttable th {
+  /* Every cell carries its own border, so columns and rows stay legible when
+     the table is scrolled sideways. */
+  border: 1px solid #9a9a9a;
   padding: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-#exceltable1 tr:nth-child(even) {
+.resulttable tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-#exceltable1 tr:hover {
+.resulttable tr:hover {
   background-color: #ddd;
 }
 
-#exceltable1 th {
+.resulttable th {
   padding-top: 12px;
   padding-bottom: 12px;
+  padding-right: 14px; /* room for the resize grip */
   text-align: left;
   background-color: black;
   color: white;
+  border-color: #000;
   position: sticky;
   top: 0px;
+}
+
+/* Drag handle on the trailing edge of each header cell. The header is
+   position: sticky, which is enough to position this against. */
+.col-resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 7px;
+  height: 100%;
+  cursor: col-resize;
+  user-select: none;
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.col-resizer:hover {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+/* Applied to the body mid-drag so the cursor does not flicker and the drag
+   cannot turn into a text selection. */
+.resizing-column {
+  cursor: col-resize;
+  user-select: none;
 }
 #subscriptions {
   font-family: Arial, Helvetica, sans-serif;

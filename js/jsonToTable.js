@@ -15,14 +15,14 @@
 // DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
 // UNINTERRUPTED OR ERROR FREE.
 /////////////////////////////////////////////////////////////////////
-document.getElementsByTagName("head")[0].innerHTML +=
-  '<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>';
 function ExportToTable() {
+  var excelfile = document.getElementById("excelfile");
+  var filePath = excelfile.value.toLowerCase();
   var regex = /^([a-zA-Z0-9\s_\\.\-:()])+(.xlsx|.xls)$/;
   /*Checks whether the file is a valid excel file*/
-  if (regex.test($("#excelfile").val().toLowerCase())) {
+  if (regex.test(filePath)) {
     var xlsxflag = false; /*Flag for checking whether excel is .xls format or .xlsx format*/
-    if ($("#excelfile").val().toLowerCase().indexOf(".xlsx") > 0) {
+    if (filePath.indexOf(".xlsx") > 0) {
       xlsxflag = true;
     }
     /*Checks whether the browser supports HTML5*/
@@ -173,15 +173,8 @@ function ExportToTable() {
                 var xlsHeader = ["autodesk_id", "product_name", "cost_center"];
                 createXLSLFormatObj.push(xlsHeader);
                 createXLSLFormatObj.push(user_metadata);
-                $.each(user_metadata, function (index, value) {
-                  var innerRowData = [];
-                  $("tbody").append(
-                    "<tr><td>" + "</td><td>" + "</td><td>" + "</td></tr>"
-                  );
-                  $.each(value, function (ind, val) {
-                    innerRowData.push(val);
-                  });
-                  createXLSLFormatObj.push(innerRowData);
+                user_metadata.forEach(function (value) {
+                  createXLSLFormatObj.push(Object.values(value));
                 });
                 /* File Name */
                 var filename = "costcenter.xlsx";
@@ -218,15 +211,8 @@ function ExportToTable() {
             var xlsHeader = ["team_alias", "offering_name", "seat_quantity"];
             createXLSLFormatObj.push(xlsHeader);
             createXLSLFormatObj.push(user_p);
-            $.each(user_p, function (index, value) {
-              var innerRowData = [];
-              $("tbody").append(
-                "<tr><td>" + "</td><td>" + "</td><td>" + "</td></tr>"
-              );
-              $.each(value, function (ind, val) {
-                innerRowData.push(val);
-              });
-              createXLSLFormatObj.push(innerRowData);
+            user_p.forEach(function (value) {
+              createXLSLFormatObj.push(Object.values(value));
             });
             /* File Name */
             var filename = "license_purchased.xlsx";
@@ -274,15 +260,8 @@ function ExportToTable() {
             ];
             createXLSLFormatObj.push(xlsHeader);
             createXLSLFormatObj.push(user_l);
-            $.each(user_l, function (index, value) {
-              var innerRowData = [];
-              $("tbody").append(
-                "<tr><td>" + "</td><td>" + "</td><td>" + "</td></tr>"
-              );
-              $.each(value, function (ind, val) {
-                innerRowData.push(val);
-              });
-              createXLSLFormatObj.push(innerRowData);
+            user_l.forEach(function (value) {
+              createXLSLFormatObj.push(Object.values(value));
             });
             /* File Name */
             var filename = "license_assigned.xlsx";
@@ -347,15 +326,8 @@ function ExportToTable() {
                 ];
                 createXLSLFormatObj.push(xlsHeader);
                 createXLSLFormatObj.push(product_version);
-                $.each(product_version, function (index, value) {
-                  var innerRowData = [];
-                  $("tbody").append(
-                    "<tr><td>" + "</td><td>" + "</td><td>" + "</td></tr>"
-                  );
-                  $.each(value, function (ind, val) {
-                    innerRowData.push(val);
-                  });
-                  createXLSLFormatObj.push(innerRowData);
+                product_version.forEach(function (value) {
+                  createXLSLFormatObj.push(Object.values(value));
                 });
                 /* File Name */
                 var filename = "product_version.xlsx";
@@ -375,13 +347,14 @@ function ExportToTable() {
           //
           cnt++;
         });
-        $("#exceltable").show();
+        /*Reveals the panel holding the tables this function just filled in*/
+        document.getElementById("demo21").classList.add("in");
       };
       if (xlsxflag) {
         /*If excel file is .xlsx extension than creates a Array Buffer from excel*/
-        reader.readAsArrayBuffer($("#excelfile")[0].files[0]);
+        reader.readAsArrayBuffer(excelfile.files[0]);
       } else {
-        reader.readAsBinaryString($("#excelfile")[0].files[0]);
+        reader.readAsBinaryString(excelfile.files[0]);
       }
     } else {
       alert("Sorry! Your browser does not support HTML5!");
@@ -396,32 +369,38 @@ function BindTable(jsondata, tableid) {
     jsondata,
     tableid
   ); /*Gets all the column headings of Excel*/
+  var table = document.querySelector(tableid);
+  if (!table) return;
   for (var i = 0; i < jsondata.length; i++) {
-    var row$ = $("<tr/>");
+    var row = document.createElement("tr");
     for (var colIndex = 0; colIndex < columns.length; colIndex++) {
       var cellValue = jsondata[i][columns[colIndex]];
-      if (cellValue == null) cellValue = "";
-      row$.append($("<td/>").html(cellValue));
+      var cell = document.createElement("td");
+      cell.textContent = cellValue == null ? "" : cellValue;
+      row.appendChild(cell);
     }
-    $(tableid).append(row$);
+    table.appendChild(row);
   }
 }
 function BindTableHeader(jsondata, tableid) {
   /*Function used to get all column names from JSON and bind the html table header*/
+  var table = document.querySelector(tableid);
   var columnSet = [];
-  var headerTr$ = $("<tr/>");
+  var headerRow = document.createElement("tr");
   for (var i = 0; i < jsondata.length; i++) {
     var rowHash = jsondata[i];
     for (var key in rowHash) {
       if (rowHash.hasOwnProperty(key)) {
-        if ($.inArray(key, columnSet) == -1) {
+        if (columnSet.indexOf(key) == -1) {
           /*Adding each unique column names to a variable array*/
           columnSet.push(key);
-          headerTr$.append($("<th/>").html(key));
+          var header = document.createElement("th");
+          header.textContent = key;
+          headerRow.appendChild(header);
         }
       }
     }
   }
-  $(tableid).append(headerTr$);
+  if (table) table.appendChild(headerRow);
   return columnSet;
 }
