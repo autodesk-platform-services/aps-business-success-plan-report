@@ -79,7 +79,7 @@ const CONTEXT_KEY = "APS_CONTEXT_ID";
 // number of rows a user has *is* their distinct product count. Dropping it
 // removes a whole query execution, which is the slow part of a run.
 const SPEC_USAGE = {
-  fields: ["fullName", "productName"],
+  fields: ["fullName", "emailAddress", "productName"],
   metrics: ["earliestUsageDate", "latestUsageDate", "totalUniqueDays"],
   where: "",
   orderBy: "",
@@ -87,7 +87,7 @@ const SPEC_USAGE = {
 // childProductName has to stay a separate query: adding it as a field would
 // change the grouping, and so the rows every other table is built from.
 const SPEC_CHILD = {
-  fields: ["fullName", "productName", "childProductName"],
+  fields: ["fullName", "emailAddress", "productName", "childProductName"],
   metrics: [],
   where: "",
   orderBy: "",
@@ -117,8 +117,10 @@ let busyButton = "";
 
 // Rows accumulated across every week loaded so far, keyed so that loading
 // another week merges into the existing rows instead of duplicating them.
-// usageTotals: "fullName|productName" -> {name, product, earliest, latest, days}
-// childTotals: "fullName|productName|childProductName" -> {name, product, child}
+// usageTotals: "user|productName" -> {name, email, product, earliest, latest, days}
+// childTotals: "user|productName|childProductName" -> {name, email, product, child}
+// where "user" comes from userKey(): the email address, which unlike a full
+// name is unique, so two people who share a name stay two rows.
 const usageTotals = new Map();
 const childTotals = new Map();
 const loadedWeeks = new Set();
@@ -612,6 +614,7 @@ function populateContextSelect(list) {
 const HEADERS = {
   activeh: [
     "Full Name",
+    "Email",
     "Product Name",
     "Earliest Usage Date",
     "Latest Usage Date",
@@ -621,6 +624,7 @@ const HEADERS = {
   ],
   inactiveh: [
     "Full Name",
+    "Email",
     "Product Name",
     "Earliest Usage Date",
     "Latest Usage Date",
@@ -630,11 +634,13 @@ const HEADERS = {
   ],
   getData402: [
     "Users who can be moved to a collection",
+    "Email",
     "Product Name",
     "Child Product Name",
   ],
   get208: [
     "Users who are only utilizing one product from a collection.",
+    "Email",
     "Child Product Name",
     "Total Unique Days",
     "Unique Products",
@@ -731,27 +737,38 @@ function colIndex(columns, name, fallback) {
   return found === -1 ? fallback : found;
 }
 
+// Identifies a person. The email address is the only user field here that is
+// actually unique - two people can share a full name, and merging them would
+// silently add one person's day counts to the other's. fullName is only a
+// fallback for the rare row that has no email.
+function userKey(email, name) {
+  return email || name;
+}
+
 // Merges one page of usage rows into usageTotals. Because the weekly windows
 // never overlap, a distinct-day count from a new week simply adds to the
 // running total, and the first/last usage dates extend the known range.
 function collectUsage(columns, rows) {
   const iName = colIndex(columns, "fullName", 0);
-  const iProduct = colIndex(columns, "productName", 1);
-  const iEarliest = colIndex(columns, "earliestUsageDate", 2);
-  const iLatest = colIndex(columns, "latestUsageDate", 3);
-  const iDays = colIndex(columns, "totalUniqueDays", 4);
+  const iEmail = colIndex(columns, "emailAddress", 1);
+  const iProduct = colIndex(columns, "productName", 2);
+  const iEarliest = colIndex(columns, "earliestUsageDate", 3);
+  const iLatest = colIndex(columns, "latestUsageDate", 4);
+  const iDays = colIndex(columns, "totalUniqueDays", 5);
 
   rows.forEach((r) => {
     const name = r[iName];
+    const email = r[iEmail];
     const product = r[iProduct];
     const earliest = Date.parse(r[iEarliest]);
     const latest = Date.parse(r[iLatest]);
     const days = Number(r[iDays]) || 0;
-    const key = name + "|" + product;
+    const key = userKey(email, name) + "|" + product;
     const found = usageTotals.get(key);
     if (!found) {
       usageTotals.set(key, {
         name: name,
+        email: email,
         product: product,
         earliest: earliest,
         latest: latest,
@@ -773,12 +790,16 @@ function collectUsage(columns, rows) {
 // duplicating.
 function collectChild(columns, rows) {
   const iName = colIndex(columns, "fullName", 0);
-  const iProduct = colIndex(columns, "productName", 1);
-  const iChild = colIndex(columns, "childProductName", 2);
+  const iEmail = colIndex(columns, "emailAddress", 1);
+  const iProduct = colIndex(columns, "productName", 2);
+  const iChild = colIndex(columns, "childProductName", 3);
 
   rows.forEach((r) => {
-    childTotals.set(r[iName] + "|" + r[iProduct] + "|" + r[iChild], {
+    const key =
+      userKey(r[iEmail], r[iName]) + "|" + r[iProduct] + "|" + r[iChild];
+    childTotals.set(key, {
       name: r[iName],
+      email: r[iEmail],
       product: r[iProduct],
       child: r[iChild],
     });
@@ -790,14 +811,18 @@ function collectChild(columns, rows) {
 // imperceptibly, and one user stays one row no matter how many weeks are in.
 function renderTables() {
   // Rows are grouped by product, so counting a user's rows gives their exact
-  // distinct product count - no uniqueProducts metric needed.
+  // distinct product count - no uniqueProducts metric needed. Counted per
+  // userKey rather than per name, so a shared full name cannot inflate one
+  // person's product count with another's rows.
   const productCount = new Map();
   usageTotals.forEach((entry) => {
-    productCount.set(entry.name, (productCount.get(entry.name) || 0) + 1);
+    const who = userKey(entry.email, entry.name);
+    productCount.set(who, (productCount.get(who) || 0) + 1);
   });
 
   const byName = (a, b) =>
     String(a.name).localeCompare(String(b.name)) ||
+    String(a.email || "").localeCompare(String(b.email || "")) ||
     String(a.product).localeCompare(String(b.product));
   // Sorted so a row keeps its position when another week is merged in.
   const entries = [...usageTotals.values()].sort(byName);
@@ -810,6 +835,7 @@ function renderTables() {
     const isActive = entry.latest >= activeCutoff;
     const cells = [
       entry.name,
+      entry.email,
       entry.product,
       shortDate(entry.earliest),
       shortDate(entry.latest),
@@ -820,8 +846,17 @@ function renderTables() {
     if (isActive) activeHtml += row(cells);
     else inactiveHtml += row(cells);
     // Someone using a single product from a collection, on five days or fewer.
-    if (entry.days <= 5 && productCount.get(entry.name) === 1) {
-      singleHtml += row([entry.name, entry.product, entry.days, 1]);
+    if (
+      entry.days <= 5 &&
+      productCount.get(userKey(entry.email, entry.name)) === 1
+    ) {
+      singleHtml += row([
+        entry.name,
+        entry.email,
+        entry.product,
+        entry.days,
+        1,
+      ]);
     }
   });
 
@@ -830,7 +865,7 @@ function renderTables() {
   const collectionHtml = [...childTotals.values()]
     .sort(byName)
     .filter((entry) => entry.product === entry.child)
-    .map((entry) => row([entry.name, entry.product, entry.child]))
+    .map((entry) => row([entry.name, entry.email, entry.product, entry.child]))
     .join("");
 
   // Assigning innerHTML keeps the tbody nodes themselves, which the inline
